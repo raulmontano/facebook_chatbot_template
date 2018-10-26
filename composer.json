@@ -1,0 +1,16 @@
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:inbenta-integrations/chatbot_api_connector.git"
+        }
+    ],
+    "require": {
+        "inbenta/chatbot-api-connector": "dev-master"
+    },
+    "autoload":{
+        "psr-4":{
+            "Inbenta\\FacebookConnector\\": "lib/FacebookConnector"
+        }
+    }
+}
