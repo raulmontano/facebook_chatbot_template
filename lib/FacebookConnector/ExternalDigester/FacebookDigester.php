@@ -249,12 +249,14 @@ class FacebookDigester extends DigesterInterface
 
 	protected function digestFromApiMultipleChoiceQuestion($message, $lastUserQuestion)
 	{
+		$isMultiple = isset($message->flags) && isset($message->flags['multiple-options']);
 		$buttonTitleSetting = isset($this->conf['button_title']) ? $this->conf['button_title'] : '';
+
 		$buttons = array();
 		$message->options = array_slice($message->options, 0, 3);
 		foreach ($message->options as $option) {
 			$buttons []= [
-                "title" => isset($option->attributes->$buttonTitleSetting) ? $option->attributes->$buttonTitleSetting : $option->label,
+                "title" => $isMultiple && isset($option->attributes->$buttonTitleSetting) ? $option->attributes->$buttonTitleSetting : $option->label,
                 "type" => "postback",
                 "payload" => json_encode([
 					"message" => $lastUserQuestion,
