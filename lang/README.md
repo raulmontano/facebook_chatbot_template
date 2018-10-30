@@ -8,7 +8,6 @@ Here is an example of a lang file:
     	'chat_closed' => 'Chat has been closed.',
     	'no_agents' => 'Sorry, there are no agents available. Can you retry in a few minutes?',
     	'creating_chat' => 'I will try to connect you with an agent. Please wait.',
-    	'chat_created' => 'Chat created successfully. Waiting for an agent...',
     	'yes' => 'Yes',
     	'no' => 'No'
     );
