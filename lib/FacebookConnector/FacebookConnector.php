@@ -21,8 +21,9 @@ class FacebookConnector extends ChatbotConnector
 
 			// Initialize base components
 			$request = file_get_contents('php://input');
+			$conversationConf = array('configuration' => $this->conf->get('conversation.default'), 'userType' => $this->conf->get('conversation.user_type'), 'environment' => $this->environment);
 			$this->session 		= new SessionManager($this->getExternalIdFromRequest());
-			$this->botClient 	= new ChatbotAPIClient($this->conf->get('api.key'), $this->conf->get('api.secret'), $this->session);
+			$this->botClient 	= new ChatbotAPIClient($this->conf->get('api.key'), $this->conf->get('api.secret'), $this->session, $conversationConf);
 
 			// Retrieve FB tokens from ExtraInfo and update configuration
 			$this->getTokensFromExtraInfo();
