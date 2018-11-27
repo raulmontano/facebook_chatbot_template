@@ -12,5 +12,6 @@ return array(
 	'thanks' => 'Gracias!',
 	'ask-rating-comment' => 'Por favor dinos porqué',
 	'ask-to-escalate' => '¿Quieres iniciar un chat con un agente?',
-	'escalation-rejected' => 'Estaré aquí esperando tus preguntas.'
+	'escalation-rejected' => 'Estaré aquí esperando tus preguntas.',
+	'api-timeout' => 'Por favor, reformula tu pregunta.',
 );

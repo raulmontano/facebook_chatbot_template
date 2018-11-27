@@ -263,7 +263,7 @@ class FacebookAPIClient
     *   Sends a flag to Facebook to display a notification alert as the bot is 'writing'
     *   This method can be used to disable the notification if a 'false' parameter is received
     */
-    protected function showBotTyping($show = true)
+    public function showBotTyping($show = true)
     {
         $action = $show ? 'typing_on' : 'typing_off';
         return $this->send([
