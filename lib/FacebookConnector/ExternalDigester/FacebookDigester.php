@@ -64,7 +64,16 @@ class FacebookDigester extends DigesterInterface
 		foreach ($messages as $msg) {
 			$msgType = $this->checkExternalMessageType($msg);
 			$digester = 'digestFromFacebook' . ucfirst($msgType);
-			$output[] = $this->$digester($msg);
+
+			//Check if there are more than one responses from one incoming message
+			$digestedMessage = $this->$digester($msg);
+			if (isset($digestedMessage['multiple_output'])) {
+				foreach ($digestedMessage['multiple_output'] as $message) {
+					$output[] = $message;
+				}
+			} else {
+				$output[] = $digestedMessage;
+			}
 		}
 		return $output;
 	}
@@ -212,10 +221,11 @@ class FacebookDigester extends DigesterInterface
 
 	protected function digestFromFacebookAttachment($message)
 	{
-		$attachment = $message->message->attachments[0];
-		return array(
-			'message' => $attachment->payload->url
-		);
+		$attachments = [];
+		foreach ($message->message->attachments as $attachment) {
+			$attachments[] = array('message' => $attachment->payload->url);
+		}
+		return ["multiple_output" => $attachments];
 	}
 
 	protected function digestFromFacebookSticker($message)
