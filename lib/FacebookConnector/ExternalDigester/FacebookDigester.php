@@ -363,7 +363,7 @@ class FacebookDigester extends DigesterInterface
         }
 
         return [
-            'text' => $this->langManager->translate('rate-content-intro'),
+            'text' => $this->langManager->translate('rate_content_intro'),
             'quick_replies' => $buttons
         ];
 	}
@@ -471,7 +471,7 @@ class FacebookDigester extends DigesterInterface
             );
         }
         return [
-            'text' => $this->langManager->translate('ask-to-escalate'),
+            'text' => $this->langManager->translate('ask_to_escalate'),
             'quick_replies' => $buttons
         ];
     }

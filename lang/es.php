@@ -2,16 +2,16 @@
 
 return array(
 	'agent_joined' => 'El agente $agentName se ha unido a la conversación.',
+	'api_timeout' => 'Por favor, reformula tu pregunta.',
+	'ask_rating_comment' => 'Por favor dinos porqué',
+	'ask_to_escalate' => '¿Quieres iniciar un chat con un agente?',
 	'chat_closed' => 'Chat cerrado',
-	'no_agents' => 'No hay agentes disponibles',
 	'creating_chat' => 'Voy a intentar conectarle con un agente. Espere por favor.',
 	'error_creating_chat' => 'Ha habido un error al intentar conectar con el chat.',
-	'yes' => 'Sí',
+	'escalation_rejected' => 'Estaré aquí esperando tus preguntas.',
 	'no' => 'No',
-	'rate-content-intro' => '¿Te ha servido esta respuesta?',
+	'no_agents' => 'No hay agentes disponibles',
+	'rate_content_intro' => '¿Te ha servido esta respuesta?',
 	'thanks' => 'Gracias!',
-	'ask-rating-comment' => 'Por favor dinos porqué',
-	'ask-to-escalate' => '¿Quieres iniciar un chat con un agente?',
-	'escalation-rejected' => 'Estaré aquí esperando tus preguntas.',
-	'api-timeout' => 'Por favor, reformula tu pregunta.',
+	'yes' => 'Sí',
 );
