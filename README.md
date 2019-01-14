@@ -18,6 +18,7 @@ This bot template inherits the functionalities from the `ChatbotConnector` libra
 * Custom FAQ title in button when displaying multiple options
 * Retrieve Facebook tokens from ExtraInfo
 * Send a button that opens a configured URL along with the answer
+* Retrieve translation labels from ExtraInfo
 
 ### INSTALLATION
 It's pretty simple to get this UI working. The mandatory configuration files are included by default in `/conf/custom` to be filled in, so you have to provide the information required in these files:
@@ -36,6 +37,28 @@ Also, this template needs two Facebook tokens: `verify_token` and `page_access_t
 * Add three properties named `development`, `preproduction` and `production` with type `text` and save.
 
 Now, create the ExtraInfo objects by clicking the **New entry** button. You can select these two new types: `verify_token` and `page_tokens`. Create the two objects naming them as `verify_token` and `page_tokens` respectively. Then, fill the information and remember to publish ExtraInfo by clicking the **Post** button.
+
+**OPTIONAL**: Manage the translation labels from ExtraInfo. Here are the steps to create the translations object in ExtraInfo:
+* Go to **Manage groups and types -> facebook -> Add type**. Name it `translations` and add a new property with type `Multiple` named with your Chatbot's language label (en, es, it...).
+* Inside your language, add all the labels that you want to override. Each label should be a `Text`entry (you can find the labels list below).
+* Save your translations object.
+
+Now you can create the ExtraInfo object by clicking the **New entry** button, selecting the `translations` type and naming it as `translations`. Then, fill each label with your desired translation and remember to publish ExtraInfo by clicking the **Post** button.
+
+Here you have the current labels with their English value:
+* agent_joined => 'Agent $agentName has joined the conversation.',
+* api_timeout => 'Please, reformulate your question.',
+* ask_rating_comment => 'Please tell us why',
+* ask_to_escalate => 'Do you want to start a chat with a human agent?',
+* chat_closed => 'Chat closed',
+* creating_chat => 'I will try to connect you with an agent. Please wait.',
+* error_creating_chat => 'There was an error joining the chat',
+* escalation_rejected => 'What else can I do for you?',
+* no => 'No',
+* no_agents => 'No agents available',
+* rate_content_intro => 'Was this answer helpful?',
+* thanks => 'Thanks!',
+* yes => 'Yes',
 
 ### HOW TO CUSTOMIZE
 **From configuration**
