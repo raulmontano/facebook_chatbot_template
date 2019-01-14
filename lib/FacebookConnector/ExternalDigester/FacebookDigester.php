@@ -223,7 +223,11 @@ class FacebookDigester extends DigesterInterface
 	{
 		$attachments = [];
 		foreach ($message->message->attachments as $attachment) {
-			$attachments[] = array('message' => $attachment->payload->url);
+			if ($attachment->type == "location" && isset($attachment->title) && isset($attachment->url)) {
+				$attachments[] = array('message' => $attachment->title .": ". $attachment->url);
+			} elseif (isset($attachment->payload) && isset($attachment->payload->url)) {
+				$attachments[] = array('message' => $attachment->payload->url);
+			}
 		}
 		return ["multiple_output" => $attachments];
 	}
