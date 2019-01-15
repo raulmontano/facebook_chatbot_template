@@ -379,9 +379,8 @@ class FacebookDigester extends DigesterInterface
 	{
 		//Remove \t \n \r and HTML tags (keeping <img> tags)
 		$text = str_replace(["\r\n", "\r", "\n", "\t"], '', strip_tags($message->message, "<img>"));
-
 		//Capture all IMG tags
-		preg_match_all('/<\s*img\s*src\s*=\s*"(.+?)"\s*\/?>/', $text, $matches, PREG_SET_ORDER, 0);
+		preg_match_all('/<\s*img.*?src\s*=\s*"(.*?)".*?\s*\/?>/', $text, $matches, PREG_SET_ORDER, 0);
 
 		$output = array();
 		foreach ($matches as $imgData) {
