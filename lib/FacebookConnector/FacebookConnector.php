@@ -29,7 +29,7 @@ class FacebookConnector extends ChatbotConnector
 			$this->getTokensFromExtraInfo();
 
 			// Try to get the translations from ExtraInfo and update the language manager
-			$this->getTranslationsFromExtraInfo();
+			$this->getTranslationsFromExtraInfo('facebook', 'translations');
 
 			// Initialize Hyperchat events handler
 			if ($this->conf->get('chat.chat.enabled')) {
@@ -67,25 +67,6 @@ class FacebookConnector extends ChatbotConnector
 		$environment = $this->environment;
 		$this->conf->set('fb.verify_token', $tokens['verify_token']);
 		$this->conf->set('fb.page_access_token', $tokens['page_tokens']->$environment);
-	}
-
-	/**
-	 *	Retrieve Language translations from ExtraInfo
-	 */
-	protected function getTranslationsFromExtraInfo()
-	{
-		$translations = [];
-		$extraInfoData = $this->botClient->getExtraInfo('facebook');
-		foreach ($extraInfoData->results as $element) {
-			if ($element->name == 'translations') {
-				$translations = json_decode(json_encode($element->value), true);
-				break;
-			}
-		}
-		$language = $this->conf->get('conversation.default.lang');
-		if (isset($translations[$language]) && count($translations[$language]) && is_array($translations[$language][0])) {
-			$this->lang->addTranslations($translations[$language][0]);
-		}
 	}
 
 	/**
