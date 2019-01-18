@@ -88,11 +88,6 @@ class FacebookDigester extends DigesterInterface
 			$messages = $request->answers;
 		} elseif ($this->checkApiMessageType($request) !== null) {
 			$messages = array('answers' => $request);
-		} elseif (count($messages) && isset($messages[0]) && $this->hasTextMessage($message[0])) {
-			// If the first message contains text although it's an unknown message type, send the text to the user
-			$output = [];
-			$output[] = $this->digestFromApiAnswer($messages[0]);
-			return $output;
 		} else {
 			throw new Exception("Unknown ChatbotAPI response: " . json_encode($request, true));
 		}
@@ -176,22 +171,22 @@ class FacebookDigester extends DigesterInterface
 	
 	protected function isApiAnswer($message)
 	{
-		return $message->type == 'answer';
+		return isset($message->type) && $message->type == 'answer';
 	}
 
 	protected function isApiPolarQuestion($message)
 	{
-		return $message->type == "polarQuestion";
+		return isset($message->type) && $message->type == "polarQuestion";
 	}
 
 	protected function isApiMultipleChoiceQuestion($message)
 	{
-		return $message->type == "multipleChoiceQuestion";
+		return isset($message->type) && $message->type == "multipleChoiceQuestion";
 	}
 
 	protected function isApiExtendedContentsAnswer($message)
 	{
-		return $message->type == "extendedContentsAnswer";
+		return isset($message->type) && $message->type == "extendedContentsAnswer";
 	}
 
 	protected function hasTextMessage($message) {
@@ -431,6 +426,10 @@ class FacebookDigester extends DigesterInterface
 
         $buttons = array();
         foreach ($urlButton as $button) {
+            // If any of the urlButtons has any invalid/missing url or title, abort and send a simple text message
+            if (!isset($button->$buttonURLProp) || !isset($button->buttonTitleProp) || empty($button->$buttonURLProp) || empty($button->$buttonTitleProp)) {
+                return ['text' => strip_tags($message->message)];
+            }
             $buttons [] = [
                 "type" => "web_url",
                 "url" => $button->$buttonURLProp,
@@ -444,7 +443,7 @@ class FacebookDigester extends DigesterInterface
                 "type" => "template",
                 "payload" => [
                     "template_type" => "button",
-                    "text" => strip_tags($message->message),
+                    "text" => substr(strip_tags($message->message), 0, 640),
                     "buttons" => $buttons
                 ]
             ]
