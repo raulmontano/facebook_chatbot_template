@@ -427,7 +427,7 @@ class FacebookDigester extends DigesterInterface
         $buttons = array();
         foreach ($urlButton as $button) {
             // If any of the urlButtons has any invalid/missing url or title, abort and send a simple text message
-            if (!isset($button->$buttonURLProp) || !isset($button->buttonTitleProp) || empty($button->$buttonURLProp) || empty($button->$buttonTitleProp)) {
+            if (!isset($button->$buttonURLProp) || !isset($button->$buttonTitleProp) || empty($button->$buttonURLProp) || empty($button->$buttonTitleProp)) {
                 return ['text' => strip_tags($message->message)];
             }
             $buttons [] = [
