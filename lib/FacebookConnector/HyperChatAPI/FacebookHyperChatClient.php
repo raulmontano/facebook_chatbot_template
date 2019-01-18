@@ -19,7 +19,7 @@ class FacebookHyperChatClient extends HyperChatClient
         return $externalClient;
     }
 
-    public function buildExternalIdFromRequest ($config)
+    public static function buildExternalIdFromRequest ($config)
     {
         $request = json_decode(file_get_contents('php://input'), true);
 
