@@ -95,4 +95,28 @@ class FacebookConnector extends ChatbotConnector
 		}
 		return $externalId;
 	}
+
+	/**
+	 * 	Override parent function to disable the returnOkResponse call.
+	 */
+	public function handleRequest()
+	{
+		try {
+			// if ($this->environment !== EnvironmentDetector::DEV_ENV) {
+			// 	// Return 200 OK response
+			// 	$this->returnOkResponse();
+			// }
+			// Store request
+			$request = file_get_contents('php://input');
+			// Translate the request into a ChatbotAPI request
+			$externalRequest = $this->digester->digestToApi($request);
+			// Check if it's needed to perform any action other than a standard user-bot interaction
+			$this->handleNonBotActions($externalRequest);
+			// Handle standard bot actions
+			$this->handleBotActions($externalRequest);
+		} catch (Exception $e) {
+			echo json_encode(["error" => $e->getMessage()]);
+			die();
+		}
+	}
 }
