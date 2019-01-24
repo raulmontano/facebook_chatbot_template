@@ -17,11 +17,11 @@
 */
 return array(
     'development'   => [
-        'type'  => '',  // http_host OR script_name
-        'regex' => '',
+        'type'  => 'http_host',  // http_host OR script_name
+        'regex' => '/^.*ngrok.io$/m',
     ],
     'preproduction' => [
-        'type'  => '',  // http_host OR script_name
-        'regex' => '',
+        'type'  => 'http_host',  // http_host OR script_name
+        'regex' => '/^.*heroku.*$/m',
     ]
 );

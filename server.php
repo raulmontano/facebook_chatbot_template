@@ -2,6 +2,8 @@
 
 include "vendor/autoload.php";
 
+error_reporting(E_ALL);
+
 use Inbenta\FacebookConnector\FacebookConnector;
 
 //Instance new FacebookConnector
