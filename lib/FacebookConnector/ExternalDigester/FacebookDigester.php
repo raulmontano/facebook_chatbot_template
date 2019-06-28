@@ -96,6 +96,7 @@ class FacebookDigester extends DigesterInterface
 
 		$output = [];
 		foreach ($messages as $msg) {
+			if (!isset($msg->message) || $msg->message === "") continue;
 			$msgType = $this->checkApiMessageType($msg);
 			$digester = 'digestFromApi' . ucfirst($msgType);
 			$digestedMessage = $this->$digester($msg, $lastUserQuestion);
@@ -124,6 +125,7 @@ class FacebookDigester extends DigesterInterface
 				return $type;
 			}
 		}
+		throw new Exception("Unknown Facebook message type");
 	}
 
 	/**
