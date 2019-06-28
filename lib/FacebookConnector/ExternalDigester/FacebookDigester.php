@@ -9,6 +9,7 @@ class FacebookDigester extends DigesterInterface
 
 	protected $conf;
 	protected $channel;
+	protected $session;
 	protected $langManager;
 	protected $externalMessageTypes = array(
 		'text',
@@ -18,11 +19,12 @@ class FacebookDigester extends DigesterInterface
 		'sticker',
 	);
 
-	public function __construct($langManager, $conf)
+	public function __construct($langManager, $conf, $session)
 	{	
 		$this->langManager = $langManager;
 		$this->channel = 'Facebook';
 		$this->conf = $conf;
+		$this->session = $session;
 	}
 
 	/**
@@ -315,12 +317,13 @@ class FacebookDigester extends DigesterInterface
         $buttonTitleSetting = isset($this->conf['button_title']) ? $this->conf['button_title'] : '';
         $buttons = array();
         $message->subAnswers = array_slice($message->subAnswers, 0, 3);
-        foreach ($message->subAnswers as $option) {
+        $this->session->set('federatedSubanswers', $message->subAnswers);
+        foreach ($message->subAnswers as $index => $option) {
             $buttons []= [
-                "title" => isset($option->attributes->$buttonTitleSetting) ? $option->attributes->$buttonTitleSetting : $option->message,
+                "title" => isset($option->attributes->$buttonTitleSetting) ? $option->attributes->$buttonTitleSetting : $option->attributes->title,
                 "type" => "postback",
                 "payload" => json_encode([
-                    "extendedContentAnswer" => $option
+                    "extendedContentAnswer" => $index
                 ])
             ];
         }

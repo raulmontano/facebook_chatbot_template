@@ -43,7 +43,7 @@ class FacebookConnector extends ChatbotConnector
 			// Instance application components
 			$externalClient 		= new FacebookAPIClient($this->conf->get('fb.page_access_token'), $request);												// Instance Facebook client
 			$chatClient 			= new FacebookHyperChatClient($this->conf->get('chat.chat'), $this->lang, $this->session, $this->conf, $externalClient);	// Instance HyperchatClient for Facebook
-			$externalDigester 		= new FacebookDigester($this->lang, $this->conf->get('conversation.digester'));												// Instance Facebook digester
+			$externalDigester 		= new FacebookDigester($this->lang, $this->conf->get('conversation.digester'), $this->session);												// Instance Facebook digester
 			$this->initComponents($externalClient, $chatClient, $externalDigester);
 		}
 		catch (Exception $e) {
