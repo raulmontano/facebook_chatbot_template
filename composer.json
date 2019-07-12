@@ -6,7 +6,8 @@
         }
     ],
     "require": {
-        "inbenta/chatbot-api-connector": "dev-master"
+        "inbenta/chatbot-api-connector": "dev-master",
+        "php": "~7.1"
     },
     "autoload":{
         "psr-4":{
