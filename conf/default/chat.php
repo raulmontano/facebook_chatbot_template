@@ -12,7 +12,11 @@ return array(
         'source' => 3,             // Numeric value, no string (without quotes)
         'guestName' => '',
         'guestContact' => '',
-        'region' => 'eu'            // eu or us
+        'server' => '',            // Your Hyperchat server URL (ask your Inbenta contact)
+        'server_port' => 443,
+        'queue' => [
+            'active' => true
+        ]
     ),
     'triesBeforeEscalation' => 0,
     'negativeRatingsBeforeEscalation' => 0

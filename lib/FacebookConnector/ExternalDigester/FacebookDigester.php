@@ -247,7 +247,7 @@ class FacebookDigester extends DigesterInterface
 		$output = array();
 		$urlButtonSetting = isset($this->conf['url_buttons']['attribute_name']) ? $this->conf['url_buttons']['attribute_name'] : '';
 
-		if (strpos($message->message, '<img')) {
+		if (strpos($message->message, '<img') !== false) {
 			// Handle a message that contains an image (<img> tag)
 			$output['multiple_output'] = $this->handleMessageWithImages($message);
 		} elseif (isset($message->attributes->$urlButtonSetting) && !empty($message->attributes->$urlButtonSetting)) {
@@ -387,10 +387,11 @@ class FacebookDigester extends DigesterInterface
 			//Get the position of the img answer to split the message
 			$imgPosition = strpos($text, $imgData[0]);
 
-			//Append first text-part of the message to the answer
-			$output[] = array(
-				'text' => substr($text, 0, $imgPosition)
-			);
+			// Append first text-part of the message to the answer
+			$firstText = substr($text, 0, $imgPosition);
+			if (strlen($firstText)){
+				$output[] = array('text' => $firstText);
+			}
 
 			//Append the image to the answer
 			$output[] = array(

@@ -14,4 +14,6 @@ return array(
 	'rate_content_intro' => '¿Te ha servido esta respuesta?',
 	'thanks' => 'Gracias!',
 	'yes' => 'Sí',
+	'queue_estimation_first' => 'Hay una persona delante de tí.',
+	'queue_estimation' => 'Hay $queuePosition personas delante de tí.',
 );

@@ -14,4 +14,6 @@ return array(
     'rate_content_intro' => 'Questa risposta ti è stata d\'aiuto?',
     'thanks' => 'Grazie!',
     'yes' => 'Sì',
+    'queue_estimation_first' => 'C\'è una persona davanti a te.',
+    'queue_estimation' => 'Ci sono $queuePosition persone di fronte a te.',
 );
