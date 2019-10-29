@@ -11,9 +11,9 @@ return array(
 	'escalation_rejected' => 'Estaré aquí esperando tus preguntas.',
 	'no' => 'No',
 	'no_agents' => 'No hay agentes disponibles',
+	'queue_estimation_first' => 'Hay una persona delante de ti.',
+	'queue_estimation' => 'Hay $queuePosition personas delante de ti.',
 	'rate_content_intro' => '¿Te ha servido esta respuesta?',
 	'thanks' => 'Gracias!',
 	'yes' => 'Sí',
-	'queue_estimation_first' => 'Hay una persona delante de tí.',
-	'queue_estimation' => 'Hay $queuePosition personas delante de tí.',
 );

@@ -3,6 +3,7 @@ namespace Inbenta\FacebookConnector\ExternalDigester;
 
 use \Exception;
 use Inbenta\ChatbotConnector\ExternalDigester\Channels\DigesterInterface;
+use Inbenta\FacebookConnector\ExternalDigester\ButtonsDigester;
 
 class FacebookDigester extends DigesterInterface
 {
@@ -42,7 +43,7 @@ class FacebookDigester extends DigesterInterface
 	{
 		$request = json_decode($request);
 
-		$isPage 	 = isset($request->object) && $request->object == "page";
+		$isPage 	 = isset($request->object) && $request->object == 'page';
 		$isMessaging = isset($request->entry) && isset($request->entry[0]) && isset($request->entry[0]->messaging);
 		if ($isPage && $isMessaging && count((array)$request->entry[0]->messaging)) {
 			return true;
@@ -125,7 +126,7 @@ class FacebookDigester extends DigesterInterface
 				return $type;
 			}
 		}
-		throw new Exception("Unknown Facebook message type");
+		throw new Exception('Unknown Facebook message type');
 	}
 
 	/**
@@ -180,17 +181,17 @@ class FacebookDigester extends DigesterInterface
 
 	protected function isApiPolarQuestion($message)
 	{
-		return isset($message->type) && $message->type == "polarQuestion";
+		return isset($message->type) && $message->type == 'polarQuestion';
 	}
 
 	protected function isApiMultipleChoiceQuestion($message)
 	{
-		return isset($message->type) && $message->type == "multipleChoiceQuestion";
+		return isset($message->type) && $message->type == 'multipleChoiceQuestion';
 	}
 
 	protected function isApiExtendedContentsAnswer($message)
 	{
-		return isset($message->type) && $message->type == "extendedContentsAnswer";
+		return isset($message->type) && $message->type == 'extendedContentsAnswer';
 	}
 
 	protected function hasTextMessage($message) {
@@ -222,13 +223,13 @@ class FacebookDigester extends DigesterInterface
 	{
 		$attachments = [];
 		foreach ($message->message->attachments as $attachment) {
-			if ($attachment->type == "location" && isset($attachment->title) && isset($attachment->url)) {
+			if ($attachment->type == 'location' && isset($attachment->title) && isset($attachment->url)) {
 				$attachments[] = array('message' => $attachment->title .": ". $attachment->url);
 			} elseif (isset($attachment->payload) && isset($attachment->payload->url)) {
 				$attachments[] = array('message' => $attachment->payload->url);
 			}
 		}
-		return ["multiple_output" => $attachments];
+		return ['multiple_output' => $attachments];
 	}
 
 	protected function digestFromFacebookSticker($message)
@@ -245,7 +246,9 @@ class FacebookDigester extends DigesterInterface
 	protected function digestFromApiAnswer($message)
 	{
 		$output = array();
-		$urlButtonSetting = isset($this->conf['url_buttons']['attribute_name']) ? $this->conf['url_buttons']['attribute_name'] : '';
+		$urlButtonSetting = isset($this->conf['url_buttons']['attribute_name'])
+			? $this->conf['url_buttons']['attribute_name']
+			: '';
 
 		if (strpos($message->message, '<img') !== false) {
 			// Handle a message that contains an image (<img> tag)
@@ -260,98 +263,86 @@ class FacebookDigester extends DigesterInterface
 		return $output;
 	}
 
-	protected function digestFromApiMultipleChoiceQuestion($message, $lastUserQuestion)
-	{
-		$isMultiple = isset($message->flags) && in_array('multiple-options', $message->flags);
-		$buttonTitleSetting = isset($this->conf['button_title']) ? $this->conf['button_title'] : '';
-
-		$buttons = array();
-		$message->options = array_slice($message->options, 0, 3);
-		foreach ($message->options as $option) {
-			$buttons []= [
-                "title" => $isMultiple && isset($option->attributes->$buttonTitleSetting) ? $option->attributes->$buttonTitleSetting : $option->label,
-                "type" => "postback",
-                "payload" => json_encode([
-					"message" => $lastUserQuestion,
-					"option" => $option->value
-                ])
-            ];
-		}
-        return [
-        	"attachment" => [
-				"type" => "template",
-				"payload" => [
-					"template_type" => "button",
-					"text" => strip_tags($message->message),
-					"buttons" => $buttons
-				]
-		    ]
-        ];
-	}
-
 	protected function digestFromApiPolarQuestion($message, $lastUserQuestion)
 	{
-		$buttons = array();
+		$buttonOptions = array();
 		foreach ($message->options as $option) {
-			$buttons []= [
-                "title" => $this->langManager->translate( $option->label ),
-                "type" => "postback",
-                "payload" => json_encode([
-					"message" => $lastUserQuestion,
-					"option" => $option->value
-                ])
+			$buttonOptions[] = [
+                'title' => $this->langManager->translate( $option->label ),
+                'payload' => [
+					'option' => $option->value
+                ]
             ];
 		}
-        return [
-        	"attachment" => [
-				"type" => "template",
-				"payload" => [
-					"template_type" => "button",
-					"text" => strip_tags($message->message),
-					"buttons" => $buttons
-				]
-		    ]
-        ];
+        $response = ButtonsDigester::buildNonPersistentButtons($message->message, $buttonOptions);
+		return $response;
 	}
 
     protected function digestFromApiExtendedContentsAnswer($message)
     {
         $buttonTitleSetting = isset($this->conf['button_title']) ? $this->conf['button_title'] : '';
-        $buttons = array();
         $message->subAnswers = array_slice($message->subAnswers, 0, 3);
+
+        $buttonOptions = array();
         $this->session->set('federatedSubanswers', $message->subAnswers);
         foreach ($message->subAnswers as $index => $option) {
-            $buttons []= [
-                "title" => isset($option->attributes->$buttonTitleSetting) ? $option->attributes->$buttonTitleSetting : $option->attributes->title,
-                "type" => "postback",
-                "payload" => json_encode([
+            $buttonOptions[] = [
+                'title' => isset($option->attributes->$buttonTitleSetting)
+                	? $option->attributes->$buttonTitleSetting
+                	: $option->attributes->title,
+                'payload' => [
                     "extendedContentAnswer" => $index
-                ])
+                ]
             ];
         }
-        return [
-            "attachment" => [
-                "type" => "template",
-                "payload" => [
-                    "template_type" => "button",
-                    "text" => strip_tags($message->message),
-                    "buttons" => $buttons
-                ]
-            ]
-        ];
+        $response = ButtonsDigester::buildPersistentButtons($message->message, $buttonOptions);
+		return $response;
     }
 
+    protected function digestFromApiMultipleChoiceQuestion($message, $lastUserQuestion)
+	{
+		$isMultiple = isset($message->flags) && in_array('multiple-options', $message->flags, true);
+		$buttonTitleSetting = isset($this->conf['button_title']) ? $this->conf['button_title'] : '';
+		$message->options = array_slice($message->options, 0, 3);
+
+		$isDirectCall = true;
+		$buttonOptions = array();
+		foreach ($message->options as $option) {
+			if (!isset($option->revisitableLink) || !$option->revisitableLink){
+				$opType = 'option';
+				$isDirectCall = false;
+				$opVal = $option->value;
+			}else{
+				$opType = 'directCall';
+				$opVal = $option->revisitableLink;
+			} 
+
+			$buttonOptions[] = [
+				'title' => $isMultiple && isset($option->attributes->$buttonTitleSetting)
+					? $option->attributes->$buttonTitleSetting
+					: $option->label,
+				'payload' => [
+					$opType => $opVal
+                ]
+			];
+		}
+
+		$response = $isDirectCall
+			? ButtonsDigester::buildPersistentButtons($message->message, $buttonOptions)
+			: ButtonsDigester::buildNonPersistentButtons($message->message, $buttonOptions);
+
+		return $response;
+	}
 
 	/********************** MISC **********************/
 
 	public function buildContentRatingsMessage($ratingOptions, $rateCode)
 	{
-        $buttons = array();
-        foreach ($ratingOptions as $option) {
-        	$buttons[] = array(
-        		'content_type' 	=> 'text',
-        		'title' 		=> $this->langManager->translate( $option['label'] ),
-        		'payload' 		=> json_encode([
+		$buttonOptions = array();
+		foreach ($ratingOptions as $option) {
+        	$buttonOptions[] = array(
+        		'title'  => $this->langManager->translate( $option['label'] ),
+        		'payload' => [
 					'askRatingComment' => isset($option['comment']) && $option['comment'],
 					'isNegativeRating' => isset($option['isNegative']) && $option['isNegative'],
 					'ratingData' =>	[
@@ -362,14 +353,12 @@ class FacebookDigester extends DigesterInterface
 							'comment' => null
 						)
 					]
-				], true)
+				]
         	);
         }
-
-        return [
-            'text' => $this->langManager->translate('rate_content_intro'),
-            'quick_replies' => $buttons
-        ];
+		$message = $this->langManager->translate('rate_content_intro');
+		$response = ButtonsDigester::buildNonPersistentButtons($message, $buttonOptions);
+		return $response;
 	}
 
 	/**
@@ -437,20 +426,20 @@ class FacebookDigester extends DigesterInterface
                 return ['text' => strip_tags($message->message)];
             }
             $buttons [] = [
-                "type" => "web_url",
-                "url" => $button->$buttonURLProp,
-                "title" => $button->$buttonTitleProp,
-                "webview_height_ratio" => "full"
+                'type' => 'web_url',
+                'url' => $button->$buttonURLProp,
+                'title' => $button->$buttonTitleProp,
+                'webview_height_ratio' => 'full'
             ];
         }
 
         return [
-            "attachment" => [
-                "type" => "template",
-                "payload" => [
-                    "template_type" => "button",
-                    "text" => substr(strip_tags($message->message), 0, 640),
-                    "buttons" => $buttons
+            'attachment' => [
+                'type' => 'template',
+                'payload' => [
+                    'template_type' => 'button',
+                    'text' => substr(strip_tags($message->message), 0, 640),
+                    'buttons' => $buttons
                 ]
             ]
         ];
@@ -458,29 +447,28 @@ class FacebookDigester extends DigesterInterface
 
     public function buildEscalationMessage()
     {
-        $buttons = array();
+        $buttonOptions = array();
         $escalateOptions = [
             [
-                "label" => 'yes',
-                "escalate" => true
+                'label' => 'yes',
+                'escalate' => true
             ],
             [
-                "label" => 'no',
-                "escalate" => false
+                'label' => 'no',
+                'escalate' => false
             ],
         ];
         foreach ($escalateOptions as $option) {
-            $buttons[] = array(
-                'content_type' 	=> 'text',
+            $buttonOptions[] = array(
                 'title' 		=> $this->langManager->translate($option['label']),
-                'payload' 		=> json_encode([
+                'payload' 		=> [
                     'escalateOption' => $option['escalate'],
-                ], true)
+                ]
             );
         }
-        return [
-            'text' => $this->langManager->translate('ask_to_escalate'),
-            'quick_replies' => $buttons
-        ];
+       
+        $message = $this->langManager->translate('ask_to_escalate');
+        $response = ButtonsDigester::buildNonPersistentButtons($message, $buttonOptions);
+		return $response;
     }
 }
