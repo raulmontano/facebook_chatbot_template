@@ -14,7 +14,7 @@ class FacebookAPIClient
      *
      * @var string
      */
-    protected $graph = 'https://graph.facebook.com/v3.1/';
+    protected $graph = 'https://graph.facebook.com/v4.0/';
 
     /**
      * The Facebook's Page Access Token.
