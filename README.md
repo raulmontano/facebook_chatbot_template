@@ -21,7 +21,7 @@ This bot template inherits the functionalities from the `ChatbotConnector` libra
 * Retrieve translation labels from ExtraInfo
 
 ### INSTALLATION
-It's pretty simple to get this UI working. The mandatory configuration files are included by default in `/conf/custom` to be filled in, so you have to provide the information required in these files:
+It's pretty simple to get this UI working, you can find all the documentation in the file [Instructions.pdf](Instructions.pdf) located in the repository root. The mandatory configuration files are included by default in `/conf/custom` to be filled in, so you have to provide the information required in these files:
 
 * **File 'api.php'**
     Provide the API Key and API Secret of your Chatbot Instance.
@@ -37,28 +37,6 @@ Also, this template needs two Facebook tokens: `verify_token` and `page_access_t
 * Add three properties named `development`, `preproduction` and `production` with type `text` and save.
 
 Now, create the ExtraInfo objects by clicking the **New entry** button. You can select these two new types: `verify_token` and `page_tokens`. Create the two objects naming them as `verify_token` and `page_tokens` respectively. Then, fill the information and remember to publish ExtraInfo by clicking the **Post** button.
-
-**OPTIONAL**: Manage the translation labels from ExtraInfo. Here are the steps to create the translations object in ExtraInfo:
-* Go to **Manage groups and types -> facebook -> Add type**. Name it `translations` and add a new property with type `Multiple` named with your Chatbot's language label (en, es, it...).
-* Inside your language, add all the labels that you want to override. Each label should be a `Text`entry (you can find the labels list below).
-* Save your translations object.
-
-Now you can create the ExtraInfo object by clicking the **New entry** button, selecting the `translations` type and naming it as `translations`. Then, fill each label with your desired translation and remember to publish ExtraInfo by clicking the **Post** button.
-
-Here you have the current labels with their English value:
-* agent_joined => 'Agent $agentName has joined the conversation.',
-* api_timeout => 'Please, reformulate your question.',
-* ask_rating_comment => 'Please tell us why',
-* ask_to_escalate => 'Do you want to start a chat with a human agent?',
-* chat_closed => 'Chat closed',
-* creating_chat => 'I will try to connect you with an agent. Please wait.',
-* error_creating_chat => 'There was an error joining the chat',
-* escalation_rejected => 'What else can I do for you?',
-* no => 'No',
-* no_agents => 'No agents available',
-* rate_content_intro => 'Was this answer helpful?',
-* thanks => 'Thanks!',
-* yes => 'Yes',
 
 ### HOW TO CUSTOMIZE
 **From configuration**
@@ -76,11 +54,11 @@ For example, when the bot is configured to escalate with an agent, a conversatio
 	protected function escalateToAgent()
 	{
 		$useExternalService = $this->conf->get('chat.useExternal');
-		
+
 		if ($useExternalService) {
 		    // Inform the user that the chat is being created
 			$this->sendMessagesToExternal($this->buildTextMessage($this->lang->translate('creating_chat')));
-			
+
 		    // Create a new instance for the external client
 		    $externalChat = New SomeExternalChatClass($this->conf->get('chat.externalConf'));
 			$externalChat->openChat();
@@ -91,22 +69,5 @@ For example, when the bot is configured to escalate with an agent, a conversatio
 	}
 ```
 
-
-**HyperChat escalation by no-result answer and negative content rating**
-
-If your bot needs integration with HyperChat, fill the chat configuration at `/conf/conf-path/chat.php` and subscribe to the following events on your Backstage instance: `invitations:new`, `invitations:accept`, `forever:alone`, `chats:close`, `messages:new`. When subscribing to the events in Backstage, you have to point to the `/server.php` file in order to handle the events from HyperChat.
-
-Configuration parameter `triesBeforeEscalation` sets the number of no-results answers after which the bot should escalate to an agent. Parameter `negativeRatingsBeforeEscalation` sets the number of negative ratings after which the bot should escalate to an agent.
-
-
-**Escalation with FAQ**
-
-If your bot has to escalate to HyperChat when matching a specific FAQ, the content needs to meet a few requisites:
-- Dynamic setting named `ESCALATE`, non-indexable, visible, `Text` box-type with `Allow multiple objects` option checked
-- In the content, add a new object to the `Escalate` setting (with the plus sign near the setting name) and type the text `TRUE`.
-
-After a Restart Project Edit and Sync & Restart Project Live, your bot should escalate when this FAQ is matched.
-Note that the `server.php` file has to be subscribed to the required HyperChat events as described in the previous section.
-
 ### DEPENDENCIES
-This application imports `inbenta/chatbot-api-connector` as a Composer dependency, that includes `symfony/http-foundation@^3.1` and `guzzlehttp/guzzle@~6.0` as dependencies too.
+This application imports [`inbenta/chatbot-api-connector`](https://github.com/inbenta-integrations/chatbot_api_connector) as a Composer dependency, that includes `symfony/http-foundation@^3.1` and `guzzlehttp/guzzle@~6.0` as dependencies too.
