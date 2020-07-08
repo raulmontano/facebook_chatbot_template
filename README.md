@@ -70,4 +70,8 @@ For example, when the bot is configured to escalate with an agent, a conversatio
 ```
 
 ### DEPENDENCIES
-This application imports [`inbenta/chatbot-api-connector`](https://github.com/inbenta-integrations/chatbot_api_connector) as a Composer dependency, that includes `symfony/http-foundation@^3.1` and `guzzlehttp/guzzle@~6.0` as dependencies too.
+This application uses these dependencies loaded through Composer:
+* [Inbenta's Chatbot API connector](https://github.com/inbenta-integrations/chatbot_api_connector)
+* PHP ~7.1
+
+It also uses the Facebook's Graph API v4.0. You can find more information in the [official Facebook documentation](https://developers.facebook.com/docs/graph-api/changelog).
