@@ -1,5 +1,7 @@
 <?php
+
 namespace Inbenta\FacebookConnector\ExternalDigester;
+
 use Inbenta\ChatbotConnector\ExternalDigester\Channels\DigesterInterface;
 
 class ButtonsDigester
@@ -45,7 +47,8 @@ class ButtonsDigester
      * @param  string $message Text message to be formatted
      * @return string          Text formatted        
      */
-    protected static function formatTextMessage(string $message){
+    protected static function formatTextMessage(string $message)
+    {
         return strip_tags($message);
     }
 
@@ -53,7 +56,7 @@ class ButtonsDigester
      * Generic method to build button messages with payload
      * @param  array  $options    Array with the buttons data: 'title', 'payload'
      * @param  bool   $persistent If buttons are persistent or single-use
-     * @return array              Buttons ready to be injected in a buttons template
+     * @return array  Buttons ready to be injected in a buttons template
      */
     protected static function buildButtons(array $options, bool $persistent)
     {
@@ -69,5 +72,25 @@ class ButtonsDigester
             ];
         }
         return $buttons;
+    }
+
+    /**
+     * Create a button with links
+     * @param  string $message  Text message to appear before the buttons
+     * @param  array  $options  Array with the buttons data key-pairs ('title' and 'payload')
+     * @return array  Buttons with link
+     */
+    public static function buildLinkButtons(string $message, array $options)
+    {
+        return [
+            'attachment' => [
+                'type' => 'template',
+                'payload' => [
+                    'template_type' => 'button',
+                    'text' => self::formatTextMessage($message),
+                    'buttons' => $options
+                ]
+            ]
+        ];
     }
 }

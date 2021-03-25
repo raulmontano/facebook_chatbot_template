@@ -1,6 +1,6 @@
 <?php
 
 return array(
-	'key' 		=> '',
-	'secret'	=> ''
+    'key' => '',
+    'secret' => ''
 );

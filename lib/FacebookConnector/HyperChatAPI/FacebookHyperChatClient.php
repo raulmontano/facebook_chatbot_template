@@ -1,4 +1,5 @@
 <?php
+
 namespace Inbenta\FacebookConnector\HyperChatAPI;
 
 use Inbenta\ChatbotConnector\HyperChatAPI\HyperChatClient;
@@ -15,11 +16,11 @@ class FacebookHyperChatClient extends HyperChatClient
             return null;
         }
         $externalClient = new FacebookAPIClient($appConf->get('fb.page_access_token'));
-        $externalClient->setSenderFromId( $externalId );
+        $externalClient->setSenderFromId($externalId);
         return $externalClient;
     }
 
-    public static function buildExternalIdFromRequest ($config)
+    public static function buildExternalIdFromRequest($config)
     {
         $request = json_decode(file_get_contents('php://input'), true);
 

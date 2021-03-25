@@ -9,7 +9,7 @@ return array(
 	            "ANSWER_TEXT",
 	        ),
 	        "maxOptions"            => 3,
-	        "maxRelatedContents"    => 2
+	        "maxRelatedContents"    => 3
 	    ),
 	    "forms" => array(
 	        "allowUserToAbandonForm"    => true,
@@ -17,7 +17,8 @@ return array(
 	    ),
 	    "lang"  => "en"
 	),
-	"user_type" => 0,
+    "user_type" => 0,
+    'source' => 'facebook',
 	"content_ratings" => array(		// Remember that these ratings need to be created in your instance
 		"enabled" => false,
 		"ratings" => array(

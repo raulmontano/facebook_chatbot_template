@@ -2,6 +2,6 @@
 
 //Inbenta API configuration
 return array(
-	'key' 		=> '',
-	'secret' 	=> ''
+    'key' => '',
+    'secret' => ''
 );

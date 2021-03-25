@@ -1,23 +1,26 @@
 <?php
 
+/**
+ * DON'T MODIFY THIS FILE!!! READ "conf/README.md" BEFORE.
+ */
+
 // Inbenta Hyperchat configuration
-return array(
-    'chat' => array(
-        'enabled' => false,
+return [
+    'chat' => [
+        'enabled' => true,
         'version' => '1',
         'appId' => '',
         'secret' => '',
         'roomId' => 1,             // Numeric value, no string (without quotes)
-        'lang' => '',
+        'lang' => 'en',
         'source' => 3,             // Numeric value, no string (without quotes)
         'guestName' => '',
         'guestContact' => '',
+        'regionServer' => 'us',     // Region of the Hyperchat server URL
         'server' => '<server>',    // Your HyperChat server URL (ask your contact person at Inbenta)
         'server_port' => 443,
-        'queue' => [
-            'active' => true
-        ]
-    ),
-    'triesBeforeEscalation' => 0,
+        'surveyId' => '1'
+    ],
+    'triesBeforeEscalation' => 2,
     'negativeRatingsBeforeEscalation' => 0
-);
+];
