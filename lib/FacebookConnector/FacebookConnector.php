@@ -10,6 +10,7 @@ use Inbenta\FacebookConnector\ExternalAPI\FacebookAPIClient;
 use Inbenta\FacebookConnector\ExternalDigester\FacebookDigester;
 use Inbenta\FacebookConnector\HyperChatAPI\FacebookHyperChatClient;
 
+use Inbenta\FacebookConnector\ContinuaChatbotAPIClient;
 
 class FacebookConnector extends ChatbotConnector
 {
@@ -29,7 +30,7 @@ class FacebookConnector extends ChatbotConnector
             ];
             $this->session   = new SessionManager($this->getExternalIdFromRequest());
             $this->validatePreviousMessages($request);
-            $this->botClient = new ChatbotAPIClient($this->conf->get('api.key'), $this->conf->get('api.secret'), $this->session, $conversationConf);
+            $this->botClient = new ContinuaChatbotAPIClient($this->conf->get('api.key'), $this->conf->get('api.secret'), $this->session, $conversationConf);
 
             // Retrieve FB tokens from ExtraInfo and update configuration
             $this->getTokensFromExtraInfo();
