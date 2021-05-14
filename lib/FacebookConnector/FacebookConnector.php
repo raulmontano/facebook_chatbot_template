@@ -59,6 +59,53 @@ class FacebookConnector extends ChatbotConnector
     }
 
     /**
+  	 *	Handle an incoming request for the ChatBot
+  	 */
+  	public function handleBotActions($externalRequest)
+  	{
+  		$needEscalation = false;
+  		$needContentRating = false;
+  		foreach ($externalRequest as $message) {
+  			// Check if is needed to execute any preset 'command'
+  			$this->handleCommands($message);
+  			// Store the last user text message to session
+  			$this->saveLastTextMessage($message);
+  			// Check if is needed to ask for a rating comment
+  			$message = $this->checkContentRatingsComment($message);
+  			// Send the messages received from the external service to the ChatbotAPI
+  			$botResponse = $this->sendMessageToBot($message);
+  			// Check if escalation to agent is needed
+  			$needEscalation = $this->checkEscalation($botResponse) ? true : $needEscalation;
+  			// Check if is needed to display content ratings
+  			$hasRating = $this->checkContentRatings($botResponse);
+  			$needContentRating = $hasRating ? $hasRating : $needContentRating;
+  			// Send the messages received from ChatbotApi back to the external service
+  			$this->sendMessagesToExternal($botResponse);
+  		}
+
+  		if($this->session->get('conversationStarted') === TRUE){
+  			$this->session->set('conversationStarted', FALSE);
+
+  			//FIXME enviar a archivo de configuracion
+  			$showWelcomeMenu = 'ver menu de inicio';
+
+  			$startMessage = [ 'message' => $showWelcomeMenu];
+
+  			$botResponse = $this->sendMessageToBot($startMessage);
+
+  			$this->sendMessagesToExternal($botResponse);
+  		}
+
+  		if ($needEscalation) {
+  			$this->handleEscalation();
+  		}
+  		// Display content rating if needed and not in chat nor asking to escalate
+  		if ($needContentRating && !$this->chatOnGoing() && !$this->session->get('askingForEscalation', false)) {
+  			$this->displayContentRatings($needContentRating);
+  		}
+  	}
+
+    /**
      *	Retrieve Facebook tokens from ExtraInfo
      */
     protected function getTokensFromExtraInfo()
